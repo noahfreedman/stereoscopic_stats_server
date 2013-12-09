@@ -88,11 +88,9 @@ $.object.extend(HttpSession.prototype,
 			));
 			
 		} catch (e) {
-			
 			$.warning('HttpSession: unable to write session data!');
 			$.warning(this.id);
 			$.warning(e.message);
-			
 		}
 	
 	},

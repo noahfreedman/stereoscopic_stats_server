@@ -86,7 +86,7 @@ module.exports = {
 	},
 	
 	/**
-	 * Generates a random string of the given lenght, from the characters
+	 * Generates a random string of the given length, from the characters
 	 * specified in the alphabet.
 	 *
 	 * @param int length

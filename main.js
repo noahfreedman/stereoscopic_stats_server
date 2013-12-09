@@ -19,36 +19,33 @@
 //
 // =============================================================================
 
-/**
- * Constructor.
- *
- * @param RestfulService service
- *	The service instance this context belongs to.
- *
- * @param HttpMessage request
- *	The instance of the request linked to this context.
- *
- * @param HttpResponse response
- *	The instance of the response linked to this context.
- *
- * @param HttpSession session
- *	The instance of the session linked to this context.
- */
-function RestfulContext(service, request, response, session) {
-	this.service = service;
-	this.request = request;
-	this.response = response;
-	this.session = session;
-}
+// Load the Nitrous bootstrap file
+require('./nitrous/nitrous.js');
 
-module.exports = {
+// Declare the required modules
+$.using(
 
-	_id: 'restfulContext',
+	'system.http.server',
+	'system.restful.service'
 	
-	prototype: RestfulContext.prototype,
-	
-	create: function(service, request, response, session) {
-		return new RestfulContext(service, request, response, session);
-	}
+);
 
-};
+// Create a new HttpServer to listen, and the service
+var server = $.httpServer.create(1337);
+var service = $.restfulService.create(server);
+
+// Define the temporary assets directories
+server.setSessionDirectory('application.assets.sessions');
+server.setUploadDirectory('application.assets.uploads');
+
+// Register the service as the 'app' module and start listening
+$.app = service;
+server.start();
+
+// Load all application modules
+$.using(
+
+	'application.modules.matlab'
+
+);
+

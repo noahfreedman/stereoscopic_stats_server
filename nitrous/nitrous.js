@@ -43,7 +43,7 @@ function Nitrous() {
 	
 	// Register the initial packages
 	this._modules = {
-		'path': $path,
+		'path': $path
 	};
 	
 	this._moduleNames = [
@@ -211,7 +211,6 @@ Nitrous.prototype = {
 	 *	The name of the module to load.
 	 */
 	using: function(/* 'module1', 'module2' */) {
-	
 		// Loads all the given modules
 		for(var i in arguments) {
 			this.load(arguments[i]);
@@ -286,6 +285,3 @@ Nitrous.prototype = {
 var instance = new Nitrous();
 global.Nitrous = instance;
 global.$ = instance;
-
-
-

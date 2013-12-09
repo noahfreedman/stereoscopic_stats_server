@@ -70,7 +70,6 @@ $.object.extend(HttpServer.prototype,
 	 *	The response object associated to the request.
 	 */
 	_onRequest: function(message, response) {
-		
 		// Create a new HttpMessage instance
 		var message = $.httpMessage.create(this, message);
 		var response = $.httpResponse.create(this, response);
@@ -233,7 +232,7 @@ $.object.extend(HttpServer.prototype,
 	 */
 	getSessionDirectoryPath: function() {
 		return this._sessionDirectoryPath;
-	},
+	}
 
 });
 	

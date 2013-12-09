@@ -63,7 +63,7 @@ $.object.extend(RestfulService.prototype,
 		 *	fails.
 		 */
 		input: function(request, response, session, terminate) {
-		
+
 			if($.object.isEmpty(request.body)) {
 					
 				// Terminate this request by sending an error response
@@ -253,7 +253,10 @@ $.object.extend(RestfulService.prototype,
 	 *	The session linked to the request and response.
 	 */
 	dispatch: function(request, response, session) {
-	
+        console.debug(request.rawUrl);
+        //console.debug(session.request.headers);
+        //console.debug(session.request.cookies);
+
 		// Get the handlers for this request method
 		var method = request.method;
 		var handlers = this._requestHandlers[method];
