@@ -22,6 +22,7 @@
 // Nitrous dependencies
 $path = require('path');
 
+
 /**
  * Constructor
  */

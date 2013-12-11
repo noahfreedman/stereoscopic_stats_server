@@ -401,7 +401,7 @@ $.object.extend(RestfulService.prototype,
 		
 			// Make sure the pattern is valid
 			if(!(/^(\/|(\/(\w|\%s|\%d|\%w|\%f)+)+)$/i).test(pattern)) {
-				throw 'Invalid request pattern format.';
+				throw 'Invalid request pattern format: ' + pattern;
 			}
 		
 			// Strip slashes

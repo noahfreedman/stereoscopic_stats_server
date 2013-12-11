@@ -20,64 +20,78 @@
 // =============================================================================
 
 // Register a new handler without arguments
-$.app.handle('GET', '/', function() {
+$.app.handle('GET', '/', function () {
 
-	// Get the current path
-	var path = this.session.data.lastPath;
-	this.session.data.lastPath = '/';
-	
-	// Send a response back to the client
-	this.response.send(200, {
-		path: '/',
-		lastPath: path ? path : 'unknown',
-		message: 'You have requested the route path.'
-	});
+    // Get the current path
+    var path = this.session.data.lastPath;
+    this.session.data.lastPath = '/';
 
-});
-
-// Register a new handler with arguments
-$.app.handle('GET', '/say/$s', function(string) {
-
-	// Get the current path
-	var path = this.session.data.lastPath;
-	this.session.data.lastPath = '/say/$s';
-
-	// Send a response back to the client
-	this.response.send(200, {
-		path: '/say',
-		lastPath: path ? path : 'unknown',
-		message: 'What I have to say: "' + string + '"'
-	});
-
-});
-
-// Register a basic "sum" request handler for two floats
-$.app.handle('GET', '/sum/$f/$f', function(float1, float2) {
-
-	// Get the current path
-	var path = this.session.data.lastPath;
-	this.session.data.lastPath = '/sum/$d/$d';
-
-	// Send a response back to the client
-	this.response.send(200, {
-		path: '/sum',
-		lastPath: path ? path : 'unknown',
-		message: 'What I have to say: "' + (parseFloat(float1) + parseFloat(float2)) + '"'
-	});
+    // Send a response back to the client
+    this.response.send(200, {
+        path: '/',
+        lastPath: path ? path : 'unknown',
+        message: 'You have requested the route path.'
+    });
 
 });
 
 // Register a basic POST request that sends back the request body
-$.app.handle('POST', function() {
+$.app.handle('POST', '/formulaToMeshGrid', function () {
+    //returns a meshgrid, sorted by increasing X, then by increasing Y
+    var that = this;
+    var formula = this.request.body.formula;
+    var xMin = this.request.body.xMin || -2;
+    var xMax = this.request.body.xMax || 2;
+    var xInterval = this.request.body.xInterval || .2;
+    var yMin = this.request.body.yMin || -2;
+    var yMax = this.request.body.yMax || 2;
+    var yInterval = this.request.body.yInterval || .2;
+    var command, path, data;
+    var scanDelay = 200; //ms
 
-	this.response.send(200, {
-	
-		contentType: this.request.contentType,
-		body: this.request.body,
-		partCount: this.request.parts.length,
-		fileCount: this.request.files.length
-	
-	});
+    //generate random file name
+    crypto.randomBytes(24, function (ex, buf) {
+        var token = buf.toString('hex');
+        path = 'tmp/' + token;
+        command = './mx "[Y,X] = meshgrid(' + xMin + ':' + xInterval + ':' + xMax + ', ' + yMin + ':' + yInterval + ':' + yMax + ');\n' +
+            formula + ';\n' + "save('" + path + "','Z','-ascii');\"";
 
+        //call matlab form command line
+        callMathLab();
+    });
+
+    function callMathLab() {
+        exec(command, function (error, stdout, stderr) {
+            //scan for MatLab output, saved to file
+            scanForFile();
+            //sendResponse();
+        });
+    }
+
+    function scanForFile() {
+        fs.stat(path, function (err, stat) {
+            if (err == null) {
+                //load file
+                fs.readFile(path, "ascii", function(err, data) {
+                    if (err) throw err;
+                    that.data = data;
+                    sendResponse();
+                })
+            } else {
+                //wait and then check for file again
+                setTimeout(scanForFile, scanDelay);
+            }
+        });
+    }
+
+    function sendResponse() {
+        //send response
+        that.response.send(200,
+            that.data
+            /* { contentType: that.request.contentType,
+            body: that.data,
+            partCount: that.request.parts.length,
+            fileCount: that.request.files.length }*/
+        );
+    }
 });
-

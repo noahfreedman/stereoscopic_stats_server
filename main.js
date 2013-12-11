@@ -21,6 +21,22 @@
 
 // Load the Nitrous bootstrap file
 require('./nitrous/nitrous.js');
+exec = require('child_process').exec;
+crypto = require('crypto');
+fs = require('fs');
+
+//add underscore module, and make accessible via global var
+underscore = require("underscore");
+_ = underscore;
+
+//override console.log
+var oldLog = console.log;
+
+//hide console messages
+console.log = console.debug = function() {};
+console.debug = function(msg) {
+    oldLog.apply(console, arguments);
+};
 
 // Declare the required modules
 $.using(
