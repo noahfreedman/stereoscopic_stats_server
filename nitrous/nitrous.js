@@ -29,13 +29,13 @@ $path = require('path');
 function Nitrous() {
 
 	// Determine the main module file name
-	var pathSeparator = $path.sep;
+	var pathSeparator = $path.sep = $path.sep || '/';
 	var mainScript = require.main.filename;
 	var mainDirectoryIndex = mainScript.lastIndexOf(pathSeparator);
 	var mainDirectory = mainDirectoryIndex > 0 ?
 		mainScript.substring(0, mainDirectoryIndex) : pathSeparator;
 	var mainPath = $path.normalize(mainDirectory);
-	
+
 	// Register the initial packages
 	this._packages = {
 		'system': __dirname + $path.sep + 'system',
