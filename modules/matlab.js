@@ -53,7 +53,7 @@ $.app.handle('POST', '/formulaToMeshGrid', function () {
     crypto.randomBytes(24, function (ex, buf) {
         var token = buf.toString('hex');
         path = 'tmp/' + token;
-        command = './mx "[Y,X] = meshgrid(' + xMin + ':' + xInterval + ':' + xMax + ', ' + yMin + ':' + yInterval + ':' + yMax + ');\n' +
+        command = './tmux_scripts/mx "[Y,X] = meshgrid(' + xMin + ':' + xInterval + ':' + xMax + ', ' + yMin + ':' + yInterval + ':' + yMax + ');\n' +
             formula + ';\n' + "save('" + path + "','Z','-ascii');\"";
 
         //call matlab form command line
