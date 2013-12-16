@@ -52,7 +52,7 @@ $.app.handle('POST', '/formulaToMeshGrid', function () {
     //generate random file name
     crypto.randomBytes(24, function (ex, buf) {
         var token = buf.toString('hex');
-        path = 'tmp/' + token;
+        path = './tmp/' + token;
         command = './tmux_scripts/mx "[Y,X] = meshgrid(' + xMin + ':' + xInterval + ':' + xMax + ', ' + yMin + ':' + yInterval + ':' + yMax + ');\n' +
             formula + ';\n' + "save('" + path + "','Z','-ascii');\"";
 
@@ -76,6 +76,11 @@ $.app.handle('POST', '/formulaToMeshGrid', function () {
                     if (err) throw err;
                     that.data = data;
                     sendResponse();
+                    //delete file
+                    fs.unlink(path, function (err) {
+                        if (err) throw err;
+                        console.log('successfully deleted ' + path);
+                    });
                 })
             } else {
                 //wait and then check for file again
