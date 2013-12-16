@@ -77,10 +77,10 @@ $.app.handle('POST', '/formulaToMeshGrid', function () {
                     that.data = data;
                     sendResponse();
                     //delete file
-                    fs.unlink(path, function (err) {
+                    /*fs.unlink(path, function (err) {
                         if (err) throw err;
                         console.log('successfully deleted ' + path);
-                    });
+                    });*/
                 })
             } else {
                 //wait and then check for file again
